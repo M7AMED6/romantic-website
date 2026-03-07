@@ -26,6 +26,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize button to disabled initially if no date is set
     startBtn.disabled = true;
 
+    // Fix mobile date input issue: prevent manual typing & open picker automatically
+    dateInput.addEventListener('keydown', (e) => e.preventDefault());
+    dateInput.addEventListener('paste', (e) => e.preventDefault());
+    
+    const showCalendarPicker = function() {
+        // Use showPicker() for modern browsers to force native calendar
+        if (typeof this.showPicker === 'function') {
+            try { this.showPicker(); } catch (err) {}
+        }
+    };
+    
+    dateInput.addEventListener('click', showCalendarPicker);
+    dateInput.addEventListener('focus', showCalendarPicker);
+    // Additional event for mobile Safari
+    dateInput.addEventListener('touchstart', showCalendarPicker, { passive: true });
+
     // Enable button only when user selects a date
     dateInput.addEventListener('change', () => {
         if(dateInput.value) {

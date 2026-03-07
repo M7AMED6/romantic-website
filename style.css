@@ -69,19 +69,30 @@ body {
 }
 
 .romantic-input {
-    padding: 15px 25px;
-    font-size: 1.2rem;
+    padding: 18px 20px;
+    font-size: 1.4rem;
     font-family: 'Montserrat', sans-serif;
     color: #ff69b4;
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid #ffb6c1;
-    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #ff69b4;
+    border-radius: 40px;
     outline: none;
-    box-shadow: 0 0 15px rgba(255, 192, 203, 0.5);
+    box-shadow: 0 0 15px rgba(255, 192, 203, 0.6);
     transition: all 0.3s ease;
     cursor: pointer;
     width: 100%;
-    max-width: 320px;
+    max-width: 350px;
+    text-align: center;
+    position: relative;
+    /* Resets appearance to standardize padding across devices */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    min-height: 60px; /* Ensure tap target is large enough on mobile */
+}
+
+/* Ensure the date text is strictly centered across all WebKit engine browsers */
+.romantic-input::-webkit-date-and-time-value {
     text-align: center;
 }
 
@@ -90,10 +101,11 @@ body {
     opacity: 1;
     display: block;
     cursor: pointer;
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     /* Soft pink tint for the calendar icon */
-    filter: invert(0.5) sepia(1) saturate(3) hue-rotate(300deg); 
+    filter: invert(0.5) sepia(1) saturate(3) hue-rotate(300deg);
+    padding-left: 10px;
 }
 
 .romantic-input:focus, .romantic-input:hover {
@@ -452,8 +464,10 @@ footer {
     }
 
     .romantic-input {
-        font-size: 1.3rem; /* Increase readability */
-        padding: 18px 20px; /* Larger tap area */
+        font-size: 1.4rem; /* Increase readability */
+        padding: 20px 20px; /* Larger tap area */
+        border-width: 3px;
+        max-width: 90%; /* Center properly */
     }
 
     .typewriter, .cursor {
@@ -513,7 +527,9 @@ footer {
     }
 
     .romantic-input {
-        font-size: 1.1rem;
+        font-size: 1.25rem;
+        padding: 18px 15px;
+        min-height: 55px; /* still tap-friendly */
     }
 
     .typewriter, .cursor {
