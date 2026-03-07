@@ -1,0 +1,410 @@
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    background: #0f0c29; /* Fallback for older browsers */
+}
+
+/* Typography Selection */
+/* EDIT HERE: Change font families here if you update the link in index.html */
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif; /* Section titles */
+}
+
+/* Animated Gradient Background */
+body {
+    background: linear-gradient(-45deg, #ff7e5f, #feb47b, #ff99cc, #cc99ff, #6441a5, #2a0845);
+    background-size: 600% 600%;
+    animation: gradientBG 20s ease infinite;
+    position: relative;
+    color: white;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Landing Screen */
+.landing-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(-45deg, #2a0845, #6441A5, #ff99cc, #ff7e5f);
+    background-size: 400% 400%;
+    animation: gradientBG 12s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 1.5s ease-in-out, visibility 1.5s;
+}
+
+.landing-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.landing-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.landing-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: white;
+    text-shadow: 0 0 15px rgba(255, 192, 203, 0.9);
+    margin-bottom: 20px;
+}
+
+.romantic-input {
+    padding: 15px 25px;
+    font-size: 1.2rem;
+    font-family: 'Montserrat', sans-serif;
+    color: #ff69b4;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #ffb6c1;
+    border-radius: 30px;
+    outline: none;
+    box-shadow: 0 0 15px rgba(255, 192, 203, 0.5);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.romantic-input:focus, .romantic-input:hover {
+    box-shadow: 0 0 25px rgba(255, 105, 180, 0.8);
+    border-color: #ff69b4;
+    transform: scale(1.05);
+}
+
+.error-message {
+    color: #ffcccc;
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    height: 20px;
+}
+
+.error-message.show {
+    opacity: 1;
+}
+
+.glowing-btn {
+    padding: 18px 45px;
+    font-size: 1.5rem;
+    font-family: 'Playfair Display', serif;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50px;
+    cursor: pointer;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.1);
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    outline: none;
+}
+
+/* Button disabled state styling */
+.glowing-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.glowing-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 35px rgba(255, 192, 203, 0.9), 0 0 60px rgba(255, 105, 180, 0.6);
+    transform: scale(1.08) translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Main Content Structure */
+.hidden {
+    display: none !important;
+}
+
+main {
+    position: relative;
+    min-height: 100vh;
+    padding: 8vh 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8vh;
+    z-index: 10;
+    opacity: 0; /* JS will change it to 1 */
+    transition: opacity 2s ease-in;
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 40px;
+    text-align: center;
+    width: 100%;
+    max-width: 850px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    animation: floatingCard 6s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle glow inside the card */
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+@keyframes floatingCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+/* Typewriter Section */
+.message-card {
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 30px;
+    /* Cinematic fade in effect for the message card container */
+    animation: cinematicFadeIn 2.5s ease-out forwards;
+}
+
+@keyframes cinematicFadeIn {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.typewriter {
+    /* EDIT HERE: This controls the font for the romantic message. You can change it to any font. */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3rem; /* Adjusted for standard modern font */
+    color: #fff;
+    /* Soft pink glowing text effect */
+    text-shadow: 0 0 20px rgba(255, 182, 193, 0.9), 0 0 30px rgba(255, 105, 180, 0.6);
+    display: inline;
+}
+
+.cursor {
+    /* Update this font to match the typewriter font */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3rem;
+    color: #fff;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* Time Counter */
+.time-counter-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 35px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    letter-spacing: 2px;
+}
+
+.counter {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.time-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 192, 203, 0.1);
+    padding: 25px 20px;
+    border-radius: 18px;
+    min-width: 120px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2), inset 0 0 15px rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.time-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 0 20px rgba(255, 192, 203, 0.3);
+}
+
+.time-box span:first-child {
+    font-size: 3.5rem;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+    margin-bottom: 5px;
+}
+
+.time-box .label {
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.85;
+    font-weight: 500;
+}
+
+/* Music Control Button */
+.music-control-section {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.music-btn {
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    background: rgba(255, 105, 180, 0.4); /* soft pink background */
+    border: 1px solid rgba(255, 192, 203, 0.6);
+    border-radius: 30px; /* rounded corners */
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease; /* smooth transitions */
+    outline: none;
+    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.2);
+}
+
+.music-btn:hover {
+    background: rgba(255, 105, 180, 0.6);
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.8); /* glow effect on hover */
+    transform: translateY(-2px);
+}
+
+/* Final Message Section */
+/* EDIT HERE: Edit styles for the new message section */
+.final-message-card {
+    background: rgba(255, 182, 193, 0.15); /* pink/light-red background */
+    border: 1px solid rgba(255, 182, 193, 0.3);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 20px rgba(255, 182, 193, 0.3); /* soft glow effect */
+    padding: 30px 40px;
+}
+
+.final-message-card p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem;
+    color: #fff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Particles & Hearts Background */
+.particles, .falling-hearts-container {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.falling-heart {
+    position: absolute;
+    top: -10%;
+    color: rgba(255, 180, 200, 0.85); /* gentle pink */
+    animation: fall linear forwards;
+    text-shadow: 0 0 8px rgba(255, 105, 180, 0.8);
+    opacity: 0;
+}
+
+@keyframes fall {
+    0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg) scale(1.2); opacity: 0; }
+}
+
+/* Mouse Follow Hearts */
+.mouse-heart {
+    position: fixed;
+    pointer-events: none;
+    color: #ff69b4;
+    z-index: 9999;
+    animation: floatUp 1.2s ease-out forwards;
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.9);
+    transform: translate(-50%, -50%); /* center heart on cursor */
+}
+
+@keyframes floatUp {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+    50% { transform: translate(-50%, -100%) scale(1.5); opacity: 0.8; }
+    100% { transform: translate(-50%, -200%) scale(2); opacity: 0; }
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    padding: 30px 20px;
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .typewriter, .cursor {
+        font-size: 2.5rem;
+    }
+    .time-counter-section h2 {
+        font-size: 2rem;
+    }
+    .time-box {
+        min-width: 90px;
+        padding: 15px 10px;
+    }
+    .time-box span:first-child {
+        font-size: 2.5rem;
+    }
+    .final-message-card p {
+        font-size: 1.4rem;
+    }
+    .glass-card {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .typewriter, .cursor {
+        font-size: 2rem;
+    }
+    .time-box {
+        min-width: 70px;
+        padding: 10px 5px;
+        gap: 5px;
+    }
+    .time-box span:first-child {
+        font-size: 2rem;
+    }
+    .final-message-card p {
+        font-size: 1.2rem;
+    }
+}

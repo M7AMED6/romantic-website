@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Memories</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for modern romantic typography -->
+    <!-- EDIT HERE: You can change the fonts by updating this link -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Landing Screen -->
+    <div id="landing-screen" class="landing-screen">
+        <div class="landing-content">
+            <h2 class="landing-title">When did our story begin?</h2>
+            <!-- EDIT HERE: The user's date choice is tracked via this input -->
+            <input type="date" id="story-date" class="romantic-input">
+            <p id="error-message" class="error-message">Please tell me when our story began.</p>
+            <button id="start-btn" class="glowing-btn">Click to Start</button>
+        </div>
+    </div>
+
+    <!-- Audio Wrapper -->
+    <!-- EDIT HERE: To use your own music, replace this link with "music.mp3" and put the file in the same folder -->
+    <audio id="bg-music" loop>
+        <source src="33tolate.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Main Content (Hidden initially) -->
+    <main id="main-content" class="hidden">
+        
+        <!-- Background Effects Containers -->
+        <div class="particles" id="particles"></div>
+        <div class="falling-hearts-container" id="falling-hearts"></div>
+
+        <section class="romantic-message-section">
+            <div class="glass-card message-card">
+                <!-- Message is dynamically injected via JavaScript -->
+                <h1 id="typewriter-text" class="typewriter"></h1><span class="cursor">|</span>
+            </div>
+        </section>
+
+        <section class="time-counter-section">
+            <div class="glass-card">
+                <h2>Our Time Together</h2>
+                <div class="counter" id="counter">
+                    <div class="time-box"><span id="days">0</span><span class="label">Days</span></div>
+                    <div class="time-box"><span id="hours">0</span><span class="label">Hours</span></div>
+                    <div class="time-box"><span id="minutes">0</span><span class="label">Minutes</span></div>
+                    <div class="time-box"><span id="seconds">0</span><span class="label">Seconds</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="music-control-section">
+            <!-- EDIT HERE: Play/Pause button for background music -->
+            <button id="music-btn" class="music-btn">Pause Music ⏸</button>
+        </section>
+
+        <!-- EDIT HERE: New final romantic message section -->
+        <section class="final-message-section">
+            <div class="glass-card final-message-card">
+                <p>معرفتش اعبر عنها غير هنا</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>Created by MOHamed AWAD</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
