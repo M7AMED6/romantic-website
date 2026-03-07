@@ -14,10 +14,10 @@
     <!-- Landing Screen -->
     <div id="landing-screen" class="landing-screen">
         <div class="landing-content">
-            <h2 class="landing-title">When did our story begin?</h2>
+            <h2 class="landing-title">Enter the date when you started being together</h2>
             <!-- EDIT HERE: The user's date choice is tracked via this input -->
             <input type="date" id="story-date" class="romantic-input">
-            <p id="error-message" class="error-message">Please tell me when our story began.</p>
+            <p id="error-message" class="error-message">Please enter a date to continue.</p>
             <button id="start-btn" class="glowing-btn">Click to Start</button>
         </div>
     </div>
@@ -36,12 +36,7 @@
         <div class="particles" id="particles"></div>
         <div class="falling-hearts-container" id="falling-hearts"></div>
 
-        <section class="romantic-message-section">
-            <div class="glass-card message-card">
-                <!-- Message is dynamically injected via JavaScript -->
-                <h1 id="typewriter-text" class="typewriter"></h1><span class="cursor">|</span>
-            </div>
-        </section>
+        <!-- Left intentionally empty since typewriter message was removed based on new design -->
 
         <section class="time-counter-section">
             <div class="glass-card">
@@ -57,13 +52,18 @@
 
         <section class="music-control-section">
             <!-- EDIT HERE: Play/Pause button for background music -->
-            <button id="music-btn" class="music-btn">Pause Music ⏸</button>
+            <button id="music-btn" class="music-btn">Play Music ▶</button>
         </section>
 
-        <!-- EDIT HERE: New final romantic message section -->
+        <!-- EDIT HERE: New letter message section -->
         <section class="final-message-section">
-            <div class="glass-card final-message-card">
-                <p>معرفتش اعبر عنها غير هنا</p>
+            <h2 class="arabic-section-title">معرفتش اعبر عنها غير هنا</h2>
+            <div class="glass-card letter-card">
+                <p class="arabic-letter">
+                    عمري ما حبيت ولا هحب حد قدك<br>
+                    احنا دايما بنتخانق<br>
+                    بس والله انا عمري ما هسيبك
+                </p>
             </div>
         </section>
 

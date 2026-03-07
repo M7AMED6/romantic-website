@@ -7,11 +7,7 @@
 // User date is now chosen interactively below.
 let dynamicStartDate = 0; 
 
-// 2. ROMANTIC MESSAGE: The text strings that will appear with the typewriter effect.
-// EDIT HERE: You can change the text inside the quotes below. Add more lines by separating them with commas.
-const messageLines = [
-    "You are the most beautiful thing that ever happened in my life."
-];
+// (Typewriter removed based on new design with static centered message)
 
 // 3. IMAGES: (Gallery removed based on request)
 
@@ -63,34 +59,77 @@ document.addEventListener("DOMContentLoaded", () => {
             mainContent.style.opacity = "1";
         }, 50);
 
-        // Attempt to play music
-        // Music does not autoplay until this interaction occurs.
+        // Automatically start playing background music
         bgMusic.play().catch(e => console.log("Audio play failed.", e));
 
-        // EDIT HERE: Setup the play/pause button event listener right after starting
-        setupMusicButton();
+        // Setup the play/pause button event listener
+        setupMusicButton(true);
 
         // Start all magical features
-        startTypewriter();
+        startMalakRain();
         startCounter();
         startFallingHearts();
     });
 
     // EDIT HERE: Music Button Toggle Logic
-    function setupMusicButton() {
-        let isMusicPlaying = true;
+    function setupMusicButton(autoPlayStarted = false) {
+        let isMusicPlaying = autoPlayStarted;
         const musicBtn = document.getElementById("music-btn");
+        
+        // Ensure starting state is correct based on autoplay
+        musicBtn.innerText = isMusicPlaying ? "Pause Music ⏸" : "Play Music ▶";
         
         musicBtn.addEventListener("click", () => {
             if (isMusicPlaying) {
                 bgMusic.pause();
                 musicBtn.innerText = "Play Music ▶";
             } else {
-                bgMusic.play();
+                bgMusic.play().catch(e => console.log("Audio play failed.", e));
                 musicBtn.innerText = "Pause Music ⏸";
             }
             isMusicPlaying = !isMusicPlaying;
         });
+    }
+
+    // Malak Rain Animation
+    function startMalakRain() {
+        const rainContainer = document.createElement("div");
+        rainContainer.id = "malak-rain";
+        document.body.appendChild(rainContainer);
+
+        const spawnInterval = setInterval(() => {
+            const drop = document.createElement("div");
+            drop.classList.add("malak-drop");
+            drop.innerText = "malak";
+            
+            // Randomize position, duration, and size
+            drop.style.left = `${Math.random() * 100}vw`;
+            drop.style.animationDuration = `${Math.random() * 2 + 2}s`; // Falls between 2 to 4 seconds
+            drop.style.fontSize = `${Math.random() * 15 + 15}px`;
+            
+            // Subtle pinkish-white colors for the words
+            const colors = ["rgba(255, 255, 255, 0.9)", "rgba(255, 192, 203, 0.9)", "rgba(255, 182, 193, 0.8)"];
+            drop.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+            rainContainer.appendChild(drop);
+
+            // Clean up off-screen
+            setTimeout(() => {
+                drop.remove();
+            }, 4000);
+        }, 80); // Spawn rapidly
+
+        // End rain after 5 seconds exactly, allowing smooth fade out
+        setTimeout(() => {
+            clearInterval(spawnInterval);
+            rainContainer.style.opacity = '0';
+            rainContainer.style.transition = 'opacity 2s ease-out';
+            
+            // Ensure fully removed from DOM
+            setTimeout(() => {
+                rainContainer.remove();
+            }, 2000);
+        }, 5000);
     }
 
     // Time Counter Engine
@@ -130,47 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setInterval(updateTime, 1000);
     }
 
-    // Typewriter Effect Engine
-    function startTypewriter() {
-        const textElement = document.getElementById("typewriter-text");
-        let lineIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-
-        function type() {
-            const currentLine = messageLines[lineIndex];
-            
-            if (isDeleting) {
-                textElement.innerText = currentLine.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                textElement.innerText = currentLine.substring(0, charIndex + 1);
-                charIndex++;
-            }
-
-            let typeSpeed = 100; // Normal typing speed
-
-            if (isDeleting) {
-                typeSpeed = 40; // Deleting speed is faster
-            }
-
-            // End of line reached
-            if (!isDeleting && charIndex === currentLine.length) {
-                typeSpeed = 3000; // Pause at the end for reading
-                isDeleting = true;
-            } 
-            // Finished deleting, move to next string
-            else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                lineIndex = (lineIndex + 1) % messageLines.length;
-                typeSpeed = 500; // Pause before typing new line
-            }
-
-            setTimeout(type, typeSpeed);
-        }
-
-        type();
-    }
+    // (Typewriter engine removed as requested)
 
     // (Slideshow Engine removed as requested)
 
