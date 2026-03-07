@@ -23,29 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const mainContent = document.getElementById("main-content");
     const bgMusic = document.getElementById("bg-music");
 
-    // --- iOS Safari Audio Unlock Workaround ---
-    // iOS strictly requires user interaction to initialize audio playback. 
-    // We bind to the very first touch/click anywhere on the screen to silently unlock the audio element.
-    const unlockAudio = () => {
-        bgMusic.play().then(() => {
-            // Immediately pause it unless they already clicked the start button
-            if (!landingScreen.classList.contains("fade-out")) {
-                bgMusic.pause();
-                bgMusic.currentTime = 0;
-            }
-        }).catch(() => {
-            // Ignore errors (expected if interaction didn't strictly count)
-        });
-        
-        // Remove listeners once execution happens
-        document.removeEventListener('touchstart', unlockAudio);
-        document.removeEventListener('click', unlockAudio);
-    };
-    
-    // Listen for the first interactions
-    document.addEventListener('touchstart', unlockAudio, { passive: true });
-    document.addEventListener('click', unlockAudio);
-
     // Initialize button to disabled initially if no date is set
     startBtn.disabled = true;
 
@@ -80,36 +57,33 @@ document.addEventListener("DOMContentLoaded", () => {
     // Start Button Click Event
     startBtn.addEventListener("click", () => {
         if (!dateInput.value) {
-            // Failsafe in case button disabled is bypassed
             errorMessage.classList.add("show");
             return;
         }
+
+        // 1. تشغيل الصوت "فوراً" قبل أي عملية تانية
+        // دي أهم خطوة للأيفون: لازم الـ play يحصل في أول سطر
+        bgMusic.play().then(() => {
+            console.log("Success: Audio started");
+        }).catch(err => {
+            console.log("First attempt failed, retrying...", err);
+            bgMusic.load(); // إعادة تحميل المصدر كخطة بديلة
+            bgMusic.play();
+        });
         
-        // EDIT HERE: Capture the chosen user date and save its timestamp for the counter logic
+        // 2. معالجة البيانات
         dynamicStartDate = new Date(dateInput.value).getTime();
 
-        // Fade out landing screen
+        // 3. تغيير شكل الشاشة (الأنيميشن)
         landingScreen.classList.add("fade-out");
-        
-        // Remove 'hidden' class and trigger fade in
         mainContent.classList.remove("hidden");
-        // A slight delay ensures the CSS transition runs properly after removing display:none
+        
         setTimeout(() => {
             mainContent.style.opacity = "1";
         }, 50);
 
-        // Automatically start playing background music (Robust load for iOS)
-        bgMusic.play().catch(e => {
-            console.log("Initial audio play failed, trying fallback.", e);
-            // Fallback: forcefully reload the audio source and try again
-            bgMusic.load();
-            bgMusic.play().catch(err => console.log("Final audio play failure on iOS.", err));
-        });
-
-        // Setup the play/pause button event listener
+        // 4. تشغيل باقي الوظائف
         setupMusicButton(true);
-
-        // Start all magical features
         startMalakRain();
         startCounter();
         startFallingHearts();
