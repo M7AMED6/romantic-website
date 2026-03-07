@@ -23,6 +23,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const mainContent = document.getElementById("main-content");
     const bgMusic = document.getElementById("bg-music");
 
+    // --- iOS Safari Audio Unlock Workaround ---
+    // iOS strictly requires user interaction to initialize audio playback. 
+    // We bind to the very first touch/click anywhere on the screen to silently unlock the audio element.
+    const unlockAudio = () => {
+        bgMusic.play().then(() => {
+            // Immediately pause it unless they already clicked the start button
+            if (!landingScreen.classList.contains("fade-out")) {
+                bgMusic.pause();
+                bgMusic.currentTime = 0;
+            }
+        }).catch(() => {
+            // Ignore errors (expected if interaction didn't strictly count)
+        });
+        
+        // Remove listeners once execution happens
+        document.removeEventListener('touchstart', unlockAudio);
+        document.removeEventListener('click', unlockAudio);
+    };
+    
+    // Listen for the first interactions
+    document.addEventListener('touchstart', unlockAudio, { passive: true });
+    document.addEventListener('click', unlockAudio);
+
     // Initialize button to disabled initially if no date is set
     startBtn.disabled = true;
 
@@ -75,8 +98,13 @@ document.addEventListener("DOMContentLoaded", () => {
             mainContent.style.opacity = "1";
         }, 50);
 
-        // Automatically start playing background music
-        bgMusic.play().catch(e => console.log("Audio play failed.", e));
+        // Automatically start playing background music (Robust load for iOS)
+        bgMusic.play().catch(e => {
+            console.log("Initial audio play failed, trying fallback.", e);
+            // Fallback: forcefully reload the audio source and try again
+            bgMusic.load();
+            bgMusic.play().catch(err => console.log("Final audio play failure on iOS.", err));
+        });
 
         // Setup the play/pause button event listener
         setupMusicButton(true);

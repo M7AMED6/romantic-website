@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,11 @@
     <link rel="stylesheet" href="style.css">
     <!-- Google Fonts for modern romantic typography -->
     <!-- EDIT HERE: You can change the fonts by updating this link -->
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
 
     <!-- Landing Screen -->
@@ -24,14 +28,14 @@
 
     <!-- Audio Wrapper -->
     <!-- EDIT HERE: To use your own music, replace this link with "music.mp3" and put the file in the same folder -->
-    <audio id="bg-music" loop>
+    <audio id="bg-music" loop playsinline preload="auto">
         <source src="33tolate.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
     <!-- Main Content (Hidden initially) -->
     <main id="main-content" class="hidden">
-        
+
         <!-- Background Effects Containers -->
         <div class="particles" id="particles"></div>
         <div class="falling-hearts-container" id="falling-hearts"></div>
@@ -74,4 +78,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
