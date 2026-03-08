@@ -15,69 +15,68 @@ document.addEventListener("DOMContentLoaded", () => {
     const bgMusic       = document.getElementById("bg-music");
 
     // ─────────────────────────────────────────────────────────────
-    //  iOS SAFARI AUDIO — TWO-STEP UNLOCK PATTERN
+    //  WEB AUDIO API SETUP
     //
-    //  iOS will ONLY let JavaScript play audio if a previous user
-    //  gesture has already "touched" the audio element. A single
-    //  play() from a button click is not always enough because iOS
-    //  sometimes considers the gesture "consumed" by the date picker.
+    //  The <audio> element .play() API is unreliable on iOS Safari.
+    //  The Web Audio API (AudioContext) is the only guaranteed way
+    //  to play audio on iOS after a user gesture.
     //
-    //  Solution:
-    //  1. The moment the user interacts with ANYTHING (touchstart on
-    //     the whole page), silently play-then-pause the audio.
-    //     This unlocks the audio context in iOS Safari.
-    //  2. On button click, call play() normally — it will now work.
+    //  Pattern:
+    //   1. Create AudioContext on first user gesture (it starts "suspended" on iOS)
+    //   2. Connect the <audio> element as a source node
+    //   3. Call audioCtx.resume() before bgMusic.play()
     // ─────────────────────────────────────────────────────────────
-    let audioUnlocked = false;
+    let audioCtx    = null;
+    let audioSource = null;
 
-    function unlockAudioContext() {
-        if (audioUnlocked) return;
-        audioUnlocked = true;
-
-        // Play a tiny silent slice, then pause immediately.
-        // This registers the audio element with iOS's media session
-        // without actually starting the music yet.
-        bgMusic.muted = true;
-        bgMusic.volume = 0;
-        bgMusic.play()
-            .then(() => {
-                bgMusic.pause();
-                bgMusic.currentTime = 0;
-                bgMusic.muted = false;
-                bgMusic.volume = 1;
-                console.log("✅ iOS audio context unlocked.");
-            })
-            .catch(() => {
-                // Not unlocked yet — will try again on next gesture
-                audioUnlocked = false;
-            });
+    function initAudioContext() {
+        if (audioCtx) return; // already set up
+        try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            audioSource = audioCtx.createMediaElementSource(bgMusic);
+            audioSource.connect(audioCtx.destination);
+            console.log("AudioContext created, state:", audioCtx.state);
+        } catch (e) {
+            console.warn("Web Audio API not available, falling back to HTML5 audio:", e);
+            audioCtx = null;
+        }
     }
 
-    // Attach to the earliest possible user gestures on the page
-    document.addEventListener('touchstart', unlockAudioContext, { passive: true, once: false });
-    document.addEventListener('touchend',   unlockAudioContext, { passive: true, once: false });
-    document.addEventListener('click',      unlockAudioContext, { once: false });
+    function playMusic() {
+        if (audioCtx) {
+            // iOS Safari starts AudioContext in "suspended" state.
+            // resume() must be called inside a user gesture.
+            audioCtx.resume().then(() => {
+                bgMusic.play().catch(e => console.warn("play() failed:", e));
+            });
+        } else {
+            // Fallback for browsers without Web Audio API
+            bgMusic.play().catch(e => console.warn("Fallback play() failed:", e));
+        }
+    }
 
     // ─────────────────────────────────────────────────────────────
     //  DATE INPUT SETUP
     // ─────────────────────────────────────────────────────────────
     startBtn.disabled = true;
 
-    // Prevent manual keyboard typing (force calendar picker only)
     dateInput.addEventListener('keydown', (e) => e.preventDefault());
     dateInput.addEventListener('paste',   (e) => e.preventDefault());
 
-    // Open native date picker on click and focus
+    // Open native date picker
     const showCalendarPicker = function () {
         if (typeof this.showPicker === 'function') {
-            try { this.showPicker(); } catch (err) { /* ignore */ }
+            try { this.showPicker(); } catch (err) {}
         }
     };
     dateInput.addEventListener('click', showCalendarPicker);
     dateInput.addEventListener('focus', showCalendarPicker);
 
-    // Enable start button once a date is selected
+    // Enable start button once date is picked
     dateInput.addEventListener('change', () => {
+        // The date change event IS a user gesture — set up AudioContext here
+        // so it's ready before the button click
+        initAudioContext();
         startBtn.disabled = !dateInput.value;
         if (dateInput.value) errorMessage.classList.remove("show");
     });
@@ -91,38 +90,23 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Remove the global unlock listeners — no longer needed
-        document.removeEventListener('touchstart', unlockAudioContext);
-        document.removeEventListener('touchend',   unlockAudioContext);
-        document.removeEventListener('click',      unlockAudioContext);
+        // Ensure AudioContext exists (in case change event wasn't enough)
+        initAudioContext();
 
-        // STEP 1 — Play audio (audio context already unlocked by now)
-        bgMusic.muted  = false;
+        // STEP 1 — Play via Web Audio API (works on iOS)
+        bgMusic.loop = true;
         bgMusic.volume = 1;
-        bgMusic.currentTime = 0;
-
-        bgMusic.play()
-            .then(() => {
-                console.log("✅ Music started successfully.");
-            })
-            .catch(err => {
-                // Last-resort: user must have somehow bypassed the unlock.
-                // Try one more time without load() to preserve audio context.
-                console.warn("⚠️ play() failed on button click:", err);
-                setTimeout(() => {
-                    bgMusic.play().catch(e => console.error("❌ Final play() attempt failed:", e));
-                }, 300);
-            });
+        playMusic();
 
         // STEP 2 — Save date for counter
         dynamicStartDate = new Date(dateInput.value).getTime();
 
-        // STEP 3 — Animate UI
+        // STEP 3 — UI transition
         landingScreen.classList.add("fade-out");
         mainContent.classList.remove("hidden");
         setTimeout(() => { mainContent.style.opacity = "1"; }, 50);
 
-        // STEP 4 — Start all features
+        // STEP 4 — All features
         setupMusicButton(true);
         startMalakRain();
         startCounter();
@@ -142,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 bgMusic.pause();
                 musicBtn.innerText = "Play Music ▶";
             } else {
-                bgMusic.play().catch(e => console.warn("Music btn play failed:", e));
+                playMusic();
                 musicBtn.innerText = "Pause Music ⏸";
             }
             isMusicPlaying = !isMusicPlaying;
